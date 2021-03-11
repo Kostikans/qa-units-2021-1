@@ -4,43 +4,19 @@ import { fakeOrders } from '../data/fakeOrders';
 import {getSortFunction, sortByDate, sortByItemCount, sortOrders, sortTypes} from './sortOrders';
 
 describe('sortByItemCount function', () => {
-	it('orders are null', () => {
-		const result = sortByItemCount(null, null);
-		expect(result).toEqual(0);
-	});
+	const cases = [
+		[{items: ['item1', 'item2']}, {items: ['1', '2']}, 0],
+		[{items: ['item1']}, {items: ['1', '2']}, -1],
+		[{items: ['item1', 'item2']}, {items: ['1']}, 1],
+		[Int16Array, Int16Array, 0],
+		[{items: null}, {items: null}, 0],
+		[null,null,0]
+	];
 
-	it('orders are not object', () => {
-		const result = sortByItemCount(Int16Array, Int16Array);
-		expect(result).toEqual(0);
-	});
-
-	it('items null', () => {
-		const order1 = {
-			items: null,
-		};
-
-		const order2 = {
-			items:  null,
-		};
-
-		const result = sortByItemCount(order1, order2);
-		expect(result).toEqual(0);
-	});
-
-
-	it('same items count', () => {
-		const order1 = {
-			items: ['item1', 'item2'],
-		};
-
-		const order2 = {
-			items: ['1', '2'],
-		};
-
-		const result = sortByItemCount(order1, order2);
-
-		expect(result).toBe(0);
-	});
+	test.each(cases)('(%i, %i , %i)',(firstArg, secondArg, expectedResult) => {
+        const result = sortByItemCount(firstArg, secondArg);
+        expect(result).toBe(expectedResult);
+    })
 });
 
 describe('sortOrders function', () => {
@@ -64,6 +40,7 @@ describe('sortOrders function', () => {
 		const result = sortOrders(orders, null);
 		expect(result).toEqual(undefined);
 	});
+
 });
 
 
@@ -77,59 +54,17 @@ describe('sortByDate function', () => {
 		const result = sortByDate(Int16Array, Int16Array);
 		expect(result).toEqual(0);
 	});
-
-	it('not date', () => {
-		const order1 = {
-			items: ['item1', 'item2'],
-		};
-
-		const order2 = {
-			items: ['1', '2'],
-		};
-
-		const result = sortByDate(order1, order2);
-
-		expect(result).toBe(0);
-	});
-	it('date1 < date2', () => {
-		const order1 = {
-			date: 154234232432,
-		};
-
-		const order2 = {
-			date: 15523424,
-		};
-
-		const result = sortByDate(order1, order2);
-
-		expect(result).toBe(-1);
-	});
-
-	it('date1 > date2', () => {
-		const order1 = {
-			date: 15523424,
-		};
-
-		const order2 = {
-			date: 154234232432,
-		};
-
-		const result = sortByDate(order1, order2);
-
-		expect(result).toBe(1);
-	});
-
-	it('date1 = date2', () => {
-		const order1 = {
-			date: 154234232432,
-		};
-
-		const order2 = {
-			date: 154234232432,
-		};
-
-		const result = sortByDate(order1, order2);
-
-		expect(result).toBe(0);
-	});
+	const cases = [
+        [{items: ['item1', 'item2']}, {items: ['1', '2']}, 0],
+        [{date: 154234232432}, {date: 15523424}, -1],
+        [{date: 15523424}, {date: 154234232432}, 1],
+        [ {date:154234232432},{date:154234232432}, 0],
+		[Int16Array, Int16Array, 0],
+		[null,null,0]
+	];
+	
+	test.each(cases)('(%i, %i , %i)',(firstArg, secondArg, expectedResult) => {
+        const result = sortByDate(firstArg, secondArg);
+        expect(result).toBe(expectedResult);
+    })
 });
